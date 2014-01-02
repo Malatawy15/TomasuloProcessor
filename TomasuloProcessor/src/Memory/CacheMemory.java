@@ -18,6 +18,8 @@ public class CacheMemory implements MemoryInterface {
 	int offsetBits;
 	int indexBits;
 	int tagBits;
+	
+	int hits, misses;
 
 	final boolean write_through = true;
 	final boolean write_allocate = true;
@@ -36,6 +38,8 @@ public class CacheMemory implements MemoryInterface {
 				cacheMemory[i][j] = new CacheLineEntry(l);
 			}
 		}
+		hits = 0;
+		misses = 0;
 		offsetBits = (int) Math.log(l);
 		indexBits = (int) Math.log(s / m);
 		tagBits = 16 - offsetBits - indexBits;
@@ -66,6 +70,7 @@ public class CacheMemory implements MemoryInterface {
 				byte data1 = cacheMemory[index][i].data[offset];
 				byte data2 = cacheMemory[index][i].data[offset + 1];
 				short myData = (short) ((short) data1 << 8 + data2);
+				hits++;
 				return new MemoryReturnValue(accessTime, myData, getBlock(
 						address, blockSize));
 			}
@@ -74,6 +79,7 @@ public class CacheMemory implements MemoryInterface {
 		mrv.stall += accessTime;
 		int writeStall = directWrite(address, mrv.data);
 		mrv.stall += writeStall;
+		misses++;
 		return mrv;
 	}
 
@@ -94,6 +100,7 @@ public class CacheMemory implements MemoryInterface {
 		}
 		for (int i = 0; i < cacheMemory[index].length; i++) {
 			if (cacheMemory[index][i].valid && cacheMemory[index][i].tag == tag) {
+				hits++;
 				if (wpHit == write_through) {
 					cacheMemory[index][i].data[offset + 1] = (byte) data;
 					data >>= 8;
@@ -106,6 +113,7 @@ public class CacheMemory implements MemoryInterface {
 				}
 			}
 		}
+		misses++;
 		if (wpMiss == write_allocate) {
 			Random rand = new Random();
 			int r = rand.nextInt(m);
@@ -165,5 +173,9 @@ public class CacheMemory implements MemoryInterface {
 		}
 		return block;
 	}
-
+	
+	public double cachHitRatio() {
+		return ((hits*1.0)/(hits+misses));
+	}
+	
 }
