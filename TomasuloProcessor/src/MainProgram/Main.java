@@ -28,7 +28,10 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		RegisterFile regFile = new RegisterFile();
-
+		
+		System.out.println("Welcome to Tomasulo Simulator, press enter to start entering your program:");
+		br.readLine();
+		
 		// Load Memory Hierarchy
 
 		Memory dataMemory = loadMemorySpecs(br, "L1 data");
@@ -72,7 +75,7 @@ public class Main {
 				.println("Please Input Memory Address where Your Program Start:");
 		int startAddress = Integer.parseInt(br.readLine().trim());
 		// Load Program
-		loadProgram(br, regFile, instructionMemory, startAddress);
+		ArrayList<Instruction> program = loadProgram(br, regFile, instructionMemory, startAddress);
 		
 
 		// Load Program Data
