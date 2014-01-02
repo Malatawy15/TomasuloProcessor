@@ -6,6 +6,10 @@ import MainProgram.Processor;
 
 public class JMPRS extends ReservationStation {
 
+	public JMPRS(int i) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void loadInstruction(Instruction in, int indROB) {
 		// TODO Auto-generated method stub

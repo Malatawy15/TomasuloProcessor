@@ -6,6 +6,10 @@ import Instructions.JMPInstruction;
 
 public class JALRRS extends ReservationStation {
 
+	public JALRRS(int i) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void loadInstruction(Instruction in, int indROB) {
 		// TODO Auto-generated method stub
