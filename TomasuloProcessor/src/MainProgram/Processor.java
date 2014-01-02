@@ -60,7 +60,7 @@ public class Processor {
 			int type = myIn.getType();
 			int index = stations.checkFree(type);
 			if (index != -1) {
-				int robIndex = rob.insert(new ReOrderObject(myIn, 0));
+				int robIndex = rob.insert(new ReOrderObject(myIn, 0)); //REPLACE ZERO BY MEMORY ADDRESS
 				stations.getStations()[type][index].loadInstruction(myIn, robIndex);
 			}
 			// Execute in reservation stations
@@ -70,6 +70,7 @@ public class Processor {
 				rs.reset();
 			}
 			// commit changes
+			rob.commit();
 		}
 		return cycles;
 	}

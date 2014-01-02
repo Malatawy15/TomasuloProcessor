@@ -1,6 +1,7 @@
 package buffers;
 
 import Instructions.Instruction;
+import Instructions.StoreInstruction;
 
 public class ReOrderObject {
 	
@@ -47,6 +48,8 @@ public class ReOrderObject {
 		this.destination = destination;
 	}
 	
-	
+	public boolean regOrMem(){
+		return ins instanceof StoreInstruction; // true for mem and false for register
+	}
 	
 }

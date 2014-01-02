@@ -24,6 +24,7 @@ public class AddSubRS extends ReservationStation {
 	private void loadOperands(){
 		if (ins instanceof AddInstruction){
 			AddInstruction ai = (AddInstruction) ins;
+			address = (short )ai.getRegA().getIndex();
 			if (ai.getRegC().getState()==null){
 				vals[0] = ai.getRegC().getVal();
 				opsReady[0] = true;
@@ -41,6 +42,7 @@ public class AddSubRS extends ReservationStation {
 		}
 		else if (ins instanceof AddImmediateInstruction){
 			AddImmediateInstruction ai = (AddImmediateInstruction) ins;
+			address = (short )ai.getRegA().getIndex();
 			vals[0] = ai.getImm();
 			opsReady[0] = true;
 			if (ai.getRegB().getState()==null){
@@ -53,6 +55,7 @@ public class AddSubRS extends ReservationStation {
 		}
 		else if (ins instanceof SubtractInstruction){
 			SubtractInstruction si = (SubtractInstruction) ins;
+			address = (short )si.getRegA().getIndex();
 			if (si.getRegC().getState()==null){
 				vals[0] = si.getRegC().getVal();
 				opsReady[0] = true;
@@ -85,6 +88,7 @@ public class AddSubRS extends ReservationStation {
 		short res = computeResult();
 		notifyWaiters(res);
 		Processor.getProcessor().getRob().writeValue(robIndex, res);
+		Processor.getProcessor().getRob().setDestination(robIndex, address);
 		reset();
 		return res;
 	}
