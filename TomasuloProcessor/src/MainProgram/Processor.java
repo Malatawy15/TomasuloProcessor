@@ -1,7 +1,12 @@
 package MainProgram;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
+import Instructions.Instruction;
+import Memory.Memory;
+import buffers.InstructionBuffer;
 import buffers.ReOrderBuffer;
 import buffers.ReOrderObject;
 
@@ -9,36 +14,56 @@ import reservationStations.ReservationStation;
 import reservationStations.Stations;
 
 public class Processor {
-	
+
 	private static Processor singletonProcessor;
-	
-	private int cycles;
+
+	private int cycles, instructionAddress;
 	private Stations stations;
 	private ReOrderBuffer rob;
-	
-	public static Processor getProcessor(){
-		if(singletonProcessor==null){
+	private InstructionBuffer instructionBuffer;
+	private Memory dataMemory, instMemory;
+	private ArrayList<Instruction> program;
+
+	public static Processor getProcessor() {
+		if (singletonProcessor == null) {
 			singletonProcessor = new Processor();
 		}
 		return singletonProcessor;
 	}
-	
-	public Processor(){
-		cycles = 0;
+
+	public Processor() {
+
 	}
-	
-	public int run(){
-		while(cycles<Integer.MAX_VALUE){
+
+	public Processor(int instructionBufferSize, int instructionAddress,
+			Memory dataMemory, Memory instMemory, ArrayList<Instruction> program) {
+		cycles = 0;
+		this.instructionBuffer = new InstructionBuffer(instructionBufferSize);
+		this.instructionAddress = instructionAddress;
+		this.dataMemory = dataMemory;
+		this.instMemory = instMemory;
+		this.program = program;
+	}
+
+	public int run() {
+		int curInstAddress = instructionAddress;
+		while (cycles < Integer.MAX_VALUE) {
 			cycles++;
-			//Fetch new instruction
-			//Issue new instruction
-			//Execute in reservation stations
-			LinkedList<ReservationStation> doneStations = stations.runCycle(); 
-			for (ReservationStation rs : doneStations){
-				rs.writeBack();
-				rs .reset();
+			// Fetch new instruction
+			if (!instructionBuffer.isFull()) {
+				int instIndex = instMemory.read((short) curInstAddress);
+				instructionBuffer.insert(program.get(instIndex));
+				curInstAddress+=2;
 			}
-			//commit changes
+			// Issue new instruction
+
+			// Execute in reservation stations
+			LinkedList<ReservationStation> doneStations = stations.runCycle();
+			for (ReservationStation rs : doneStations) {
+				rs.writeBack();
+				rs.reset();
+			}
+			// commit changes
 		}
 		return cycles;
 	}
@@ -66,5 +91,5 @@ public class Processor {
 	public void setRob(ReOrderBuffer rob) {
 		this.rob = rob;
 	}
-	
+
 }

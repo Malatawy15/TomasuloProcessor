@@ -72,7 +72,7 @@ public class Main {
 				.println("Please Input Memory Address where Your Program Start:");
 		int startAddress = Integer.parseInt(br.readLine().trim());
 		// Load Program
-		loadProgram(br, regFile, instructionMemory, startAddress);
+		ArrayList<Instruction> program = loadProgram(br, regFile, instructionMemory, startAddress);
 		
 
 		// Load Program Data
