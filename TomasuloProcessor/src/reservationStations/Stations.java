@@ -53,5 +53,29 @@ public class Stations {
 				return i;
 		return -1;
 	}
+
+	public int getNumStations() {
+		return numStations;
+	}
+
+	public void setNumStations(int numStations) {
+		this.numStations = numStations;
+	}
+
+	public ReservationStation[][] getStations() {
+		return stations;
+	}
+
+	public void setStations(ReservationStation[][] stations) {
+		this.stations = stations;
+	}
+
+	public int[] getCapacities() {
+		return capacities;
+	}
+
+	public void setCapacities(int[] capacities) {
+		this.capacities = capacities;
+	}
 	
 }
