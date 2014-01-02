@@ -43,6 +43,8 @@ public abstract class ReservationStation {
 	}
 	*/
 	
+	public abstract void loadInstruction(Instruction in, int indROB);
+	
 	public abstract boolean exec();
 	
 	public abstract short writeBack();
