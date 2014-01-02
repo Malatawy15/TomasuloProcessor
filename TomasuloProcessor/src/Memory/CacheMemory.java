@@ -41,9 +41,9 @@ public class CacheMemory implements MemoryInterface {
 		tagBits = 16 - offsetBits - indexBits;
 	}
 
-	public short read(short address) {
+	public MemoryReturnValue read(short address) {
 		MemoryReturnValue mrv = read(address, l);
-		return mrv.data;
+		return mrv;
 	}
 
 	public MemoryReturnValue read(short address, int blockSize) {

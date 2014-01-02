@@ -1,5 +1,10 @@
 package buffers;
 
+
+import MainProgram.Processor;
+import Memory.Memory;
+import RegisterFile.RegisterFile;
+
 public class ReOrderBuffer extends Buffer<ReOrderObject>{
 	
 	public ReOrderBuffer(int size){
@@ -24,10 +29,12 @@ public class ReOrderBuffer extends Buffer<ReOrderObject>{
 		if (roo.isReady()){
 			removeFirst();
 			if (roo.regOrMem()){
-				//memory
+				Memory m = Processor.getProcessor().getDataMemory();
+				m.write((short) roo.getDestination(), roo.getValue());
 			}
 			else {
-				//register
+				RegisterFile rf = Processor.getProcessor().getRegisterFile();
+				rf.getRegister(roo.getDestination()).setVal(roo.getValue());
 			}
 		}
 	}

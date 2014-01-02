@@ -17,12 +17,13 @@ public class Memory {
 		}
 	}
 
-	public short read(short address) {
-		return 0;
+	public MemoryReturnValue read(short address) {
+		return cacheMemory[0].read(address);
 	}
 
-	public void write(short address, short data) {
-
+	public int write(short address, short data) {
+		int stall = cacheMemory[0].write(address, data);
+		return stall;
 	}
 
 }
