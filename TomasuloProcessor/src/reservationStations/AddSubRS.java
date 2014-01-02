@@ -4,9 +4,9 @@ import Instructions.AddImmediateInstruction;
 import Instructions.AddInstruction;
 import Instructions.Instruction;
 import Instructions.SubtractInstruction;
+import MainProgram.Processor;
 
 public class AddSubRS extends ReservationStation {
-	
 	
 	public AddSubRS(int comp){
 		reset();
@@ -82,7 +82,23 @@ public class AddSubRS extends ReservationStation {
 	
 	@Override
 	public short writeBack() {
-		// TODO Auto-generated method stub
+		short res = computeResult();
+		notifyWaiters(res);
+		Processor.getProcessor().getRob().writeValue(robIndex, res);
+		reset();
+		return res;
+	}
+	
+	public short computeResult(){
+		if (ins instanceof AddInstruction){
+			return (short) (vals[0] + vals[1]);
+		}
+		else if (ins instanceof AddImmediateInstruction){
+			return (short) (vals[0] + vals[1]);
+		}
+		else if (ins instanceof SubtractInstruction){
+			return (short) (vals[1] - vals[0]);
+		}
 		return 0;
 	}
 

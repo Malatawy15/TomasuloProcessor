@@ -30,6 +30,12 @@ public abstract class ReservationStation {
 		}
 	}
 	
+	public void notifyWaiters(short res){
+		for (CommonDataBus c : cdb){
+			c.rs.operandAvailable(c.operandIndex, res);
+		}
+	}
+	
 	/*
 	public boolean exec(){
 		curNum++;

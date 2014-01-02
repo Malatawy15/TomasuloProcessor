@@ -2,6 +2,9 @@ package MainProgram;
 
 import java.util.LinkedList;
 
+import buffers.ReOrderBuffer;
+import buffers.ReOrderObject;
+
 import reservationStations.ReservationStation;
 import reservationStations.Stations;
 
@@ -9,8 +12,9 @@ public class Processor {
 	
 	private static Processor singletonProcessor;
 	
-	int cycles;
-	Stations stations;
+	private int cycles;
+	private Stations stations;
+	private ReOrderBuffer rob;
 	
 	public static Processor getProcessor(){
 		if(singletonProcessor==null){
@@ -37,6 +41,30 @@ public class Processor {
 			//commit changes
 		}
 		return cycles;
+	}
+
+	public int getCycles() {
+		return cycles;
+	}
+
+	public void setCycles(int cycles) {
+		this.cycles = cycles;
+	}
+
+	public Stations getStations() {
+		return stations;
+	}
+
+	public void setStations(Stations stations) {
+		this.stations = stations;
+	}
+
+	public ReOrderBuffer getRob() {
+		return rob;
+	}
+
+	public void setRob(ReOrderBuffer rob) {
+		this.rob = rob;
 	}
 	
 }
