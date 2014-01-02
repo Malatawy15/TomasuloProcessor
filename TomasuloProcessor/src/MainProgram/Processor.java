@@ -17,8 +17,8 @@ public class Processor {
 
 	private static Processor singletonProcessor;
 
-	private int cycles, instructionAddress;
-
+	private int cycles;
+	private short instructionAddress;
 	private Stations stations;
 	private ReOrderBuffer rob;
 	private InstructionBuffer instructionBuffer;
@@ -40,13 +40,14 @@ public class Processor {
 	public Processor() {
 	}
 
+
 	public void initProcessor(int instructionBufferSize,
 			int instructionAddress, Memory dataMemory, Memory instMemory,
 			ArrayList<Instruction> program, RegisterFile registerFile,
 			int nRobEntries, int nRS[], int nCyclesRS[]) {
 		cycles = 0;
 		this.instructionBuffer = new InstructionBuffer(instructionBufferSize);
-		this.instructionAddress = instructionAddress;
+		this.instructionAddress = (short) instructionAddress;
 		this.dataMemory = dataMemory;
 		this.instMemory = instMemory;
 		this.program = program;
@@ -54,6 +55,16 @@ public class Processor {
 		this.nRobEntries = nRobEntries;
 		this.nRS = nRS;
 		this.nCyclesRS = nCyclesRS;
+	}
+	
+	public void flush() {
+		for (int i = 0; i < stations.getStations().length; i++) {
+			for (int j = 0; j < stations.getStations()[i].length; j++) {
+				stations.getStations()[i][j].reset();
+			}
+		}
+		rob = new ReOrderBuffer(rob.getCapacity());
+		instructionBuffer = new InstructionBuffer(instructionBuffer.getCapacity());
 	}
 
 	public RegisterFile getRegisterFile() {
@@ -102,13 +113,14 @@ public class Processor {
 		return cycles;
 	}
 
-	public int getInstructionAddress() {
+	public short getInstructionAddress() {
 		return instructionAddress;
 	}
 
-	public void setInstructionAddress(int instructionAddress) {
+	public void setInstructionAddress(short instructionAddress) {
 		this.instructionAddress = instructionAddress;
 	}
+
 
 	public InstructionBuffer getInstructionBuffer() {
 		return instructionBuffer;
