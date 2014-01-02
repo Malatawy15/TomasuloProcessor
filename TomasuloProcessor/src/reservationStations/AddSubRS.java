@@ -24,7 +24,7 @@ public class AddSubRS extends ReservationStation {
 	private void loadOperands(){
 		if (ins instanceof AddInstruction){
 			AddInstruction ai = (AddInstruction) ins;
-			address = (short )ai.getRegA().getIndex();
+			address = (short)ai.getRegA().getIndex();
 			if (ai.getRegC().getState()==null){
 				vals[0] = ai.getRegC().getVal();
 				opsReady[0] = true;

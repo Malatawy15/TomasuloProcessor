@@ -1,5 +1,7 @@
 package buffers;
 
+import MainProgram.Processor;
+
 public class ReOrderBuffer extends Buffer<ReOrderObject>{
 	
 	public ReOrderBuffer(int size){
@@ -23,12 +25,19 @@ public class ReOrderBuffer extends Buffer<ReOrderObject>{
 		//if passes all checks, commit changes to memory
 		if (roo.isReady()){
 			removeFirst();
-			if (roo.regOrMem()){
+			int cond = roo.regOrMem(); 
+			if (cond==0){
 				//memory
 			}
-			else {
+			else if (cond==1){
 				//register
 			}
+			
+			if (roo.isAlterPC()){
+				Processor.getProcessor().setInstructionAddress(roo.getValPC());
+				//flush and reset
+			}
+			
 		}
 	}
 	

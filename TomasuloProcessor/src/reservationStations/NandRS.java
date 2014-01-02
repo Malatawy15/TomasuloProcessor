@@ -22,6 +22,7 @@ public class NandRS extends ReservationStation {
 
 	private void loadOperands() {
 		NandInstruction ni = (NandInstruction) ins;
+		address = (short )ni.getRegA().getIndex();
 		if (ni.getRegC().getState() == null) {
 			vals[0] = ni.getRegC().getVal();
 			opsReady[0] = true;
@@ -51,6 +52,7 @@ public class NandRS extends ReservationStation {
 		short res = computeResult();
 		notifyWaiters(res);
 		Processor.getProcessor().getRob().writeValue(robIndex, res);
+		Processor.getProcessor().getRob().setDestination(robIndex, address);
 		reset();
 		return res;
 	}

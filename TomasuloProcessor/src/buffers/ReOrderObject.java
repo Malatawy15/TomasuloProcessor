@@ -1,13 +1,17 @@
 package buffers;
 
+import Instructions.BEQInstruction;
 import Instructions.Instruction;
+import Instructions.JALRInstruction;
+import Instructions.JMPInstruction;
+import Instructions.RetInstruction;
 import Instructions.StoreInstruction;
 
 public class ReOrderObject {
 	
-	private boolean ready;
+	private boolean ready, alterPC;
 	private Instruction ins;
-	private short value;
+	private short value, valPC;
 	private int destination;
 	
 	public ReOrderObject(Instruction i, int des){
@@ -48,8 +52,38 @@ public class ReOrderObject {
 		this.destination = destination;
 	}
 	
-	public boolean regOrMem(){
-		return ins instanceof StoreInstruction; // true for mem and false for register
+	public int regOrMem(){
+		if (isBranch()){
+			alterPC = true;
+		}
+		if (ins instanceof StoreInstruction){
+			return 0;
+		}
+		else if (ins instanceof JALRInstruction || !isBranch()){
+			return 1;
+		}
+		else return 2;
+	}
+	
+	public boolean isBranch(){
+		return (ins instanceof BEQInstruction) || (ins instanceof JALRInstruction) || 
+				(ins instanceof JMPInstruction) || (ins instanceof RetInstruction);
+	}
+
+	public boolean isAlterPC() {
+		return alterPC;
+	}
+
+	public void setAlterPC(boolean alterPC) {
+		this.alterPC = alterPC;
+	}
+
+	public short getValPC() {
+		return valPC;
+	}
+
+	public void setValPC(short valPC) {
+		this.valPC = valPC;
 	}
 	
 }

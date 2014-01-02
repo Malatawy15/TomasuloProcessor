@@ -21,6 +21,7 @@ public class MultiplyRS extends ReservationStation {
 
 	private void loadOperands() {
 		MultiplyInstruction mi = (MultiplyInstruction) ins;
+		address = (short )mi.getRegA().getIndex();
 		if (mi.getRegC().getState() == null) {
 			vals[0] = mi.getRegC().getVal();
 			opsReady[0] = true;
@@ -50,6 +51,7 @@ public class MultiplyRS extends ReservationStation {
 		short res = computeResult();
 		notifyWaiters(res);
 		Processor.getProcessor().getRob().writeValue(robIndex, res);
+		Processor.getProcessor().getRob().setDestination(robIndex, address);
 		reset();
 		return res;
 	}

@@ -17,7 +17,8 @@ public class Processor {
 
 	private static Processor singletonProcessor;
 
-	private int cycles, instructionAddress;
+	private int cycles;
+	private short instructionAddress;
 	private Stations stations;
 	private ReOrderBuffer rob;
 	private InstructionBuffer instructionBuffer;
@@ -35,7 +36,7 @@ public class Processor {
 
 	}
 
-	public Processor(int instructionBufferSize, int instructionAddress,
+	public Processor(int instructionBufferSize, short instructionAddress,
 			Memory dataMemory, Memory instMemory, ArrayList<Instruction> program) {
 		cycles = 0;
 		this.instructionBuffer = new InstructionBuffer(instructionBufferSize);
@@ -73,6 +74,14 @@ public class Processor {
 			rob.commit();
 		}
 		return cycles;
+	}
+
+	public short getInstructionAddress() {
+		return instructionAddress;
+	}
+
+	public void setInstructionAddress(short instructionAddress) {
+		this.instructionAddress = instructionAddress;
 	}
 
 	public int getCycles() {
