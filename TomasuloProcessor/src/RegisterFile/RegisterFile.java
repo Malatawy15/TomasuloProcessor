@@ -12,7 +12,7 @@ public class RegisterFile {
 	}
 	
 	public Register getRegister(String name){
-		if(!name.matches("R[0-9]+")) {
+		if(name.length()>8 || !name.matches("R[0-9]+")) {
 			return null;
 		}
 		int registerNumber = Integer.parseInt(name.substring(1));
