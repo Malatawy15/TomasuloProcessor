@@ -58,11 +58,10 @@ public class Processor {
 			// Issue new instruction
 			Instruction myIn = instructionBuffer.getFirst();
 			int type = myIn.getType();
-			for(int i = 0; i < stations.getStations()[type].length; i++) {
-				if (!stations.getStations()[type][i].isBusy()) {
-					int robIndex = rob.insert(new ReOrderObject(myIn, 0));
-					stations.getStations()[type][i].loadInstruction(myIn, robIndex);
-				}
+			int index = stations.checkFree(type);
+			if (index != -1) {
+				int robIndex = rob.insert(new ReOrderObject(myIn, 0));
+				stations.getStations()[type][index].loadInstruction(myIn, robIndex);
 			}
 			// Execute in reservation stations
 			LinkedList<ReservationStation> doneStations = stations.runCycle();
