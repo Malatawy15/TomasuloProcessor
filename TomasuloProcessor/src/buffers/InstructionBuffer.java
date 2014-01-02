@@ -1,4 +1,11 @@
 package buffers;
 
-public class InstructionBuffer {
+import Instructions.Instruction;
+
+public class InstructionBuffer extends Buffer<Instruction>{
+	
+	public InstructionBuffer(int size){
+		super(size);
+	}
+	
 }
