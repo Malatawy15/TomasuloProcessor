@@ -3,14 +3,11 @@ package Memory;
 public class Memory {
 
 	MainMemory mainMemory;
-	CacheMemory[] instructionCacheMemory;
-	CacheMemory[] dataCacheMemory;
+	CacheMemory[] cacheMemory;
 
-	Memory(int mainMemoryAccessTime, CacheMemory[] instructionCacheMemory,
-			CacheMemory[] dataCacheMemory) {
+	public Memory(int mainMemoryAccessTime, CacheMemory[] cacheMemory) {
 		mainMemory = new MainMemory(mainMemoryAccessTime);
-		this.instructionCacheMemory = instructionCacheMemory;
-		this.dataCacheMemory = dataCacheMemory;
+		this.cacheMemory = cacheMemory;
 	}
 	
 	public short read(short address) {
