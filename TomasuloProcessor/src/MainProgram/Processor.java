@@ -7,8 +7,17 @@ import reservationStations.Stations;
 
 public class Processor {
 	
+	private static Processor singletonProcessor;
+	
 	int cycles;
 	Stations stations;
+	
+	public static Processor getProcessor(){
+		if(singletonProcessor==null){
+			singletonProcessor = new Processor();
+		}
+		return singletonProcessor;
+	}
 	
 	public Processor(){
 		cycles = 0;
