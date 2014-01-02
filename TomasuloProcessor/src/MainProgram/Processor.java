@@ -56,7 +56,14 @@ public class Processor {
 				curInstAddress+=2;
 			}
 			// Issue new instruction
-
+			Instruction myIn = instructionBuffer.getFirst();
+			int type = myIn.getType();
+			for(int i = 0; i < stations.getStations()[type].length; i++) {
+				if (!stations.getStations()[type][i].isBusy()) {
+					int robIndex = rob.insert(new ReOrderObject(myIn, 0));
+					stations.getStations()[type][i].loadInstruction(myIn, robIndex);
+				}
+			}
 			// Execute in reservation stations
 			LinkedList<ReservationStation> doneStations = stations.runCycle();
 			for (ReservationStation rs : doneStations) {
