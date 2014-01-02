@@ -4,15 +4,12 @@ import reservationStations.ReservationStation;
 
 public class RegisterFile {
 	private Register generalPuroseRegisters[];
-	private ReservationStation registerStat[];
 	static final int REGISTERS_COUNT=8;
 	
 	public RegisterFile() {
 		generalPuroseRegisters = new Register[REGISTERS_COUNT];
-		registerStat = new ReservationStation[REGISTERS_COUNT];
 		for(int i=0; i<generalPuroseRegisters.length; i++){
-			generalPuroseRegisters[i] = new Register((short) 0, i==0);
-			registerStat[i] = null;
+			generalPuroseRegisters[i] = new Register(i, (short) 0, i==0);
 		}
 	}
 	
@@ -38,6 +35,22 @@ public class RegisterFile {
 		return generalPuroseRegisters[registerNumber];
 	}
 	
+	public void clearState(){
+		for (int i=0;i<generalPuroseRegisters.length;i++){
+			generalPuroseRegisters[i].clearState();
+		}
+	}
+	
+	public ReservationStation getState(int index){
+		return generalPuroseRegisters[index].getState();
+	}
+	
+	public void setState(int index, ReservationStation rs){
+		generalPuroseRegisters[index].setState(rs);
+	}
+	
+	/*
+	
 	public ReservationStation getState(int registerNumber){
 		return registerStat[registerNumber];
 	}
@@ -46,10 +59,14 @@ public class RegisterFile {
 		registerStat[registerNumber] = r;
 	}
 	
+	
+	
 	public void resetState(){
 		for (int i=0;i<registerStat.length;i++){
 			registerStat[i] = null;
 		}
 	}
+	
+	*/
 	
 }

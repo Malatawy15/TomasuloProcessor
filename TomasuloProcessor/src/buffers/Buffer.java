@@ -54,14 +54,14 @@ public class Buffer <T>{
 		return buffer.get(index);
 	}
 	
-	public boolean insert(T ins){
+	public int insert(T ins){
 		if (isFull()){
-			return false;
+			return -1;
 		}
 		tail = (tail+1)%capacity;
 		buffer.set(tail, ins);
 		numItems++;
-		return true;
+		return tail;
 	}
 	
 }

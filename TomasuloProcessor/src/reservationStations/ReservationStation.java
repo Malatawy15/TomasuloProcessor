@@ -22,11 +22,28 @@ public abstract class ReservationStation {
 		cdb = new LinkedList<CommonDataBus>();
 	}
 	
+	public void operandAvailable(int ind, short value){
+		opsReady[ind] = true;
+		vals[ind] = value;
+		if (opsReady[0]&&opsReady[1]){
+			curNum++;
+		}
+	}
+	
+	/*
 	public boolean exec(){
 		curNum++;
 		return curNum == numToExec;
 	}
+	*/
+	
+	public abstract boolean exec();
 	
 	public abstract short writeBack();
+
+	public boolean isBusy() {
+		// TODO Auto-generated method stub
+		return busy;
+	}
 	
 }
