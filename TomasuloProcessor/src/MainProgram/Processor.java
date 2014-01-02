@@ -3,15 +3,15 @@ package MainProgram;
 import java.util.LinkedList;
 
 import reservationStations.ReservationStation;
+import reservationStations.Stations;
 
 public class Processor {
 	
 	int cycles;
-	LinkedList<ReservationStation> doneStations;
+	Stations stations;
 	
 	public Processor(){
 		cycles = 0;
-		doneStations = new LinkedList<ReservationStation>();
 	}
 	
 	public int run(){
@@ -20,11 +20,11 @@ public class Processor {
 			//Fetch new instruction
 			//Issue new instruction
 			//Execute in reservation stations
+			LinkedList<ReservationStation> doneStations = stations.runCycle(); 
 			for (ReservationStation rs : doneStations){
 				rs.writeBack();
 				rs .reset();
 			}
-			doneStations.clear();
 			//commit changes
 		}
 		return cycles;
