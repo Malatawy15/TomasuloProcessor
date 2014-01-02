@@ -48,6 +48,16 @@ public class Processor {
 		this.program = program;
 		this.registerFile = registerFile;
 	}
+	
+	public void flush() {
+		for (int i = 0; i < stations.getStations().length; i++) {
+			for (int j = 0; j < stations.getStations()[i].length; j++) {
+				stations.getStations()[i][j].reset();
+			}
+		}
+		rob = new ReOrderBuffer(rob.getCapacity());
+		instructionBuffer = new InstructionBuffer(instructionBuffer.getCapacity());
+	}
 
 	public RegisterFile getRegisterFile() {
 		return registerFile;
