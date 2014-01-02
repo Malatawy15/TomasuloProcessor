@@ -1,6 +1,5 @@
 package MainProgram;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -19,12 +18,17 @@ public class Processor {
 	private static Processor singletonProcessor;
 
 	private int cycles, instructionAddress;
+
 	private Stations stations;
 	private ReOrderBuffer rob;
 	private InstructionBuffer instructionBuffer;
 	private Memory dataMemory, instMemory;
 	private RegisterFile registerFile;
 	private ArrayList<Instruction> program;
+
+	private int nRobEntries;
+	private int[] nRS;
+	private int[] nCyclesRS;
 
 	public static Processor getProcessor() {
 		if (singletonProcessor == null) {
@@ -34,12 +38,12 @@ public class Processor {
 	}
 
 	public Processor() {
-
 	}
 
-	public Processor(int instructionBufferSize, int instructionAddress,
-			Memory dataMemory, Memory instMemory, ArrayList<Instruction> program,
-			RegisterFile registerFile) {
+	public void initProcessor(int instructionBufferSize,
+			int instructionAddress, Memory dataMemory, Memory instMemory,
+			ArrayList<Instruction> program, RegisterFile registerFile,
+			int nRobEntries, int nRS[], int nCyclesRS[]) {
 		cycles = 0;
 		this.instructionBuffer = new InstructionBuffer(instructionBufferSize);
 		this.instructionAddress = instructionAddress;
@@ -47,6 +51,9 @@ public class Processor {
 		this.instMemory = instMemory;
 		this.program = program;
 		this.registerFile = registerFile;
+		this.nRobEntries = nRobEntries;
+		this.nRS = nRS;
+		this.nCyclesRS = nCyclesRS;
 	}
 
 	public RegisterFile getRegisterFile() {
@@ -63,17 +70,25 @@ public class Processor {
 			cycles++;
 			// Fetch new instruction
 			if (!instructionBuffer.isFull()) {
-				int instIndex = (instMemory.read((short) curInstAddress)).getData();
+				int instIndex = (instMemory.read((short) curInstAddress))
+						.getData();
+				if (instIndex < 0 || instIndex > program.size())
+					return 0;
 				instructionBuffer.insert(program.get(instIndex));
-				curInstAddress+=2;
+				curInstAddress += 2;
 			}
 			// Issue new instruction
 			Instruction myIn = instructionBuffer.getFirst();
 			int type = myIn.getType();
 			int index = stations.checkFree(type);
 			if (index != -1) {
-				int robIndex = rob.insert(new ReOrderObject(myIn, 0)); //REPLACE ZERO BY MEMORY ADDRESS
-				stations.getStations()[type][index].loadInstruction(myIn, robIndex);
+				int robIndex = rob.insert(new ReOrderObject(myIn, 0)); // REPLACE
+																		// ZERO
+																		// BY
+																		// MEMORY
+																		// ADDRESS
+				stations.getStations()[type][index].loadInstruction(myIn,
+						robIndex);
 			}
 			// Execute in reservation stations
 			LinkedList<ReservationStation> doneStations = stations.runCycle();

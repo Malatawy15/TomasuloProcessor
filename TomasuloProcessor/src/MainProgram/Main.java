@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import reservationStations.LoadRS;
+
 import Instructions.AddImmediateInstruction;
 import Instructions.AddInstruction;
 import Instructions.BEQInstruction;
@@ -28,10 +30,11 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		RegisterFile regFile = new RegisterFile();
-		
-		System.out.println("Welcome to Tomasulo Simulator, press enter to start entering your program:");
+
+		System.out
+				.println("Welcome to Tomasulo Simulator, press enter to start entering your program:");
 		br.readLine();
-		
+
 		// Load Memory Hierarchy
 
 		Memory dataMemory = loadMemorySpecs(br, "L1 data");
@@ -42,41 +45,18 @@ public class Main {
 				.println("Now, Please enter the size of the instruction buffer:");
 		int instructionBufferSize = Integer.parseInt(br.readLine());
 
-		System.out
-				.println("Specify the number Load/Store reservation stations:");
-		int nLSReservationStations = Integer.parseInt(br.readLine());
-
-		System.out
-				.println("Specify the number of cycles needed by Load/Store reservation stations:");
-		int nCyclesLSReservationStations = Integer.parseInt(br.readLine());
-
-		System.out
-				.println("Specify the number Add/Subtract reservation stations:");
-		int nASReservationStations = Integer.parseInt(br.readLine());
-
-		System.out
-				.println("Specify the number of cycles needed by Add/Subtract reservation stations:");
-		int nCyclesASReservationStations = Integer.parseInt(br.readLine());
-
-		System.out
-				.println("Specify the number Multiply/Nand reservation stations:");
-		int nMNReservationStations = Integer.parseInt(br.readLine());
-
-		System.out
-				.println("Specify the number of cycles needed by Multiply/Nand reservation stations:");
-		int nCyclesMNReservationStations = Integer.parseInt(br.readLine());
+		int nRS[] = new int[9], nCyclesRS[] = new int[9];
+		loadRS(br, nRS, nCyclesRS);
 
 		System.out.println("Specify the number of ROB entries:");
 		int nROBEntries = Integer.parseInt(br.readLine());
-
-		// TODO Init Hardware Organization
 
 		System.out
 				.println("Please Input Memory Address where Your Program Start:");
 		int startAddress = Integer.parseInt(br.readLine().trim());
 		// Load Program
-		ArrayList<Instruction> program = loadProgram(br, regFile, instructionMemory, startAddress);
-		
+		ArrayList<Instruction> program = loadProgram(br, regFile,
+				instructionMemory, startAddress);
 
 		// Load Program Data
 		System.out.println("Please enter program data:");
@@ -94,8 +74,26 @@ public class Main {
 			System.out
 					.println("Enter [Address Value] for a new piece of data in the memory, or a new line to end:");
 		}
+		Processor.getProcessor().initProcessor(instructionBufferSize,
+				startAddress, dataMemory, instructionMemory, program, regFile,
+				nROBEntries, nRS, nCyclesRS);
 
-		// TODO INIT processor, Run Program
+	}
+
+	private static void loadRS(BufferedReader br, int nRS[], int nCyclesRS[])
+			throws NumberFormatException, IOException {
+		String names[] = { "Load", "Store", "JMP", "BEQ", "JALR", "RET",
+				"Add/Addi/Subtract", "Nand", "Multiply" };
+
+		for (int i = 0; i < 9; i++) {
+			System.out.println("Specify the number " + names[i]
+					+ " reservation stations:");
+			nRS[i] = Integer.parseInt(br.readLine());
+
+			System.out.println("Specify the number of cycles needed by "
+					+ names[i] + " reservation stations:");
+			nCyclesRS[i] = Integer.parseInt(br.readLine());
+		}
 	}
 
 	private static Memory loadMemorySpecs(BufferedReader br, String memoryName)
@@ -139,7 +137,8 @@ public class Main {
 	}
 
 	private static ArrayList<Instruction> loadProgram(BufferedReader br,
-			RegisterFile regFile, Memory instructionMemory, int startAddress) throws NumberFormatException, IOException {
+			RegisterFile regFile, Memory instructionMemory, int startAddress)
+			throws NumberFormatException, IOException {
 		System.out
 				.println("Please Input Your program, end it with an empty line:");
 
@@ -243,6 +242,9 @@ public class Main {
 		}
 		for (int i = 0, curAddress = startAddress; i < program.size(); i++, curAddress += 2) {
 			instructionMemory.write((short) curAddress, (short) i);
+			if(i==program.size()-1){
+				instructionMemory.write((short)(curAddress+2), (short)program.size());
+			}
 		}
 		return program;
 	}
