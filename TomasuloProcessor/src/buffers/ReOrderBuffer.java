@@ -1,6 +1,8 @@
 package buffers;
 
 import MainProgram.Processor;
+import Memory.Memory;
+import RegisterFile.RegisterFile;
 
 public class ReOrderBuffer extends Buffer<ReOrderObject>{
 	
@@ -28,9 +30,13 @@ public class ReOrderBuffer extends Buffer<ReOrderObject>{
 			int cond = roo.regOrMem(); 
 			if (cond==0){
 				//memory
+				Memory m = Processor.getProcessor().getDataMemory();
+				m.write((short) roo.getDestination(), roo.getValue());
 			}
 			else if (cond==1){
 				//register
+				RegisterFile rf = Processor.getProcessor().getRegisterFile();
+				rf.getRegister(roo.getDestination()).setVal(roo.getValue());
 			}
 			
 			if (roo.isAlterPC()){

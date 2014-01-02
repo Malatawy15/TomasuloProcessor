@@ -44,6 +44,46 @@ public class Buffer <T>{
 		return buffer.get(head);
 	}
 	
+	public int getHead() {
+		return head;
+	}
+
+	public void setHead(int head) {
+		this.head = head;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public int getTail() {
+		return tail;
+	}
+
+	public void setTail(int tail) {
+		this.tail = tail;
+	}
+
+	public int getNumItems() {
+		return numItems;
+	}
+
+	public void setNumItems(int numItems) {
+		this.numItems = numItems;
+	}
+
+	public ArrayList<T> getBuffer() {
+		return buffer;
+	}
+
+	public void setBuffer(ArrayList<T> buffer) {
+		this.buffer = buffer;
+	}
+
 	public T getItem(int index){
 		if (isEmpty()){
 			return null;

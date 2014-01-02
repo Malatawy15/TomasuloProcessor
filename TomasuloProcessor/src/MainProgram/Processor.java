@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import Instructions.Instruction;
 import Memory.Memory;
+import RegisterFile.RegisterFile;
 import buffers.InstructionBuffer;
 import buffers.ReOrderBuffer;
 import buffers.ReOrderObject;
@@ -23,6 +24,7 @@ public class Processor {
 	private ReOrderBuffer rob;
 	private InstructionBuffer instructionBuffer;
 	private Memory dataMemory, instMemory;
+	private RegisterFile registerFile;
 	private ArrayList<Instruction> program;
 
 	public static Processor getProcessor() {
@@ -36,14 +38,35 @@ public class Processor {
 
 	}
 
+
 	public Processor(int instructionBufferSize, short instructionAddress,
-			Memory dataMemory, Memory instMemory, ArrayList<Instruction> program) {
+			Memory dataMemory, Memory instMemory, ArrayList<Instruction> program,
+			RegisterFile registerFile) {
 		cycles = 0;
 		this.instructionBuffer = new InstructionBuffer(instructionBufferSize);
 		this.instructionAddress = instructionAddress;
 		this.dataMemory = dataMemory;
 		this.instMemory = instMemory;
 		this.program = program;
+		this.registerFile = registerFile;
+	}
+	
+	public void flush() {
+		for (int i = 0; i < stations.getStations().length; i++) {
+			for (int j = 0; j < stations.getStations()[i].length; j++) {
+				stations.getStations()[i][j].reset();
+			}
+		}
+		rob = new ReOrderBuffer(rob.getCapacity());
+		instructionBuffer = new InstructionBuffer(instructionBuffer.getCapacity());
+	}
+
+	public RegisterFile getRegisterFile() {
+		return registerFile;
+	}
+
+	public void setRegisterFile(RegisterFile registerFile) {
+		this.registerFile = registerFile;
 	}
 
 	public int run() {
@@ -52,7 +75,7 @@ public class Processor {
 			cycles++;
 			// Fetch new instruction
 			if (!instructionBuffer.isFull()) {
-				int instIndex = instMemory.read((short) curInstAddress);
+				int instIndex = (instMemory.read((short) curInstAddress)).getData();
 				instructionBuffer.insert(program.get(instIndex));
 				curInstAddress+=2;
 			}
@@ -82,6 +105,39 @@ public class Processor {
 
 	public void setInstructionAddress(short instructionAddress) {
 		this.instructionAddress = instructionAddress;
+	}
+
+
+	public InstructionBuffer getInstructionBuffer() {
+		return instructionBuffer;
+	}
+
+	public void setInstructionBuffer(InstructionBuffer instructionBuffer) {
+		this.instructionBuffer = instructionBuffer;
+	}
+
+	public Memory getDataMemory() {
+		return dataMemory;
+	}
+
+	public void setDataMemory(Memory dataMemory) {
+		this.dataMemory = dataMemory;
+	}
+
+	public Memory getInstMemory() {
+		return instMemory;
+	}
+
+	public void setInstMemory(Memory instMemory) {
+		this.instMemory = instMemory;
+	}
+
+	public ArrayList<Instruction> getProgram() {
+		return program;
+	}
+
+	public void setProgram(ArrayList<Instruction> program) {
+		this.program = program;
 	}
 
 	public int getCycles() {
