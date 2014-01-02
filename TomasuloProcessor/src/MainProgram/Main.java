@@ -82,8 +82,8 @@ public class Main {
 
 	private static void loadRS(BufferedReader br, int nRS[], int nCyclesRS[])
 			throws NumberFormatException, IOException {
-		String names[] = { "Load", "Store", "JMP", "BEQ", "JALR", "RET",
-				"Add/Addi/Subtract", "Nand", "Multiply" };
+		String names[] = { "Add/Addi/Subtract", "BEQ", "JALR", "JMP", "Load",
+				"Multiply", "Nand", "RET", "Store" };
 
 		for (int i = 0; i < 9; i++) {
 			System.out.println("Specify the number " + names[i]
@@ -242,8 +242,9 @@ public class Main {
 		}
 		for (int i = 0, curAddress = startAddress; i < program.size(); i++, curAddress += 2) {
 			instructionMemory.write((short) curAddress, (short) i);
-			if(i==program.size()-1){
-				instructionMemory.write((short)(curAddress+2), (short)program.size());
+			if (i == program.size() - 1) {
+				instructionMemory.write((short) (curAddress + 2),
+						(short) program.size());
 			}
 		}
 		return program;
