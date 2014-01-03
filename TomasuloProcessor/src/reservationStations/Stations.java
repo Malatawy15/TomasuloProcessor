@@ -25,23 +25,23 @@ public class Stations {
 			for (int j = 0; j < capacities[i]; j++) {
 				switch (i) {
 				case 0:
-					stations[i][j] = new AddSubRS(i); break;
+					stations[i][j] = new AddSubRS(nCycles[i]); break;
 				case 1:
-					stations[i][j] = new BEQRS(i); break;
+					stations[i][j] = new BEQRS(nCycles[i]); break;
 				case 2:
-					stations[i][j] = new JALRRS(i); break;
+					stations[i][j] = new JALRRS(nCycles[i]); break;
 				case 3:
-					stations[i][j] = new JMPRS(i); break;
+					stations[i][j] = new JMPRS(nCycles[i]); break;
 				case 4:
-					stations[i][j] = new LoadRS(i); break;
+					stations[i][j] = new LoadRS(nCycles[i]); break;
 				case 5:
-					stations[i][j] = new MultiplyRS(i); break;
+					stations[i][j] = new MultiplyRS(nCycles[i]); break;
 				case 6:
-					stations[i][j] = new NandRS(i); break;
+					stations[i][j] = new NandRS(nCycles[i]); break;
 				case 7:
-					stations[i][j] = new RETRS(i); break;
+					stations[i][j] = new RETRS(nCycles[i]); break;
 				case 8:
-					stations[i][j] = new StoreRS(i); break;
+					stations[i][j] = new StoreRS(nCycles[i]); break;
 				}
 			}
 		}
@@ -51,7 +51,7 @@ public class Stations {
 		LinkedList<ReservationStation> done = new LinkedList<ReservationStation>();
 		for (int i = 0; i < stations.length; i++) {
 			for (int j = 0; j < stations[i].length; j++) {
-				if (stations[i][j].exec()) {
+				if (stations[i][j].isBusy() && stations[i][j].exec()) {
 					done.add(stations[i][j]);
 				}
 			}

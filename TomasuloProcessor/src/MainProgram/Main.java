@@ -64,7 +64,7 @@ public class Main {
 		StringTokenizer st;
 		System.out
 				.println("Enter [Address Value] for a new piece of data in the memory, or a new line to end:");
-		while ((line = br.readLine()) != "") {
+		while (!(line = br.readLine()).equals("")) {
 			st = new StringTokenizer(line, " ,");
 			short address = Short.parseShort(st.nextToken());
 			short value = Short.parseShort(st.nextToken());
@@ -77,7 +77,7 @@ public class Main {
 		Processor.getProcessor().initProcessor(instructionBufferSize,
 				startAddress, dataMemory, instructionMemory, program, regFile,
 				nROBEntries, nRS, nCyclesRS);
-
+		System.out.println("Number of cycles: " + Processor.getProcessor().run());
 	}
 
 	private static void loadRS(BufferedReader br, int nRS[], int nCyclesRS[])
@@ -237,6 +237,7 @@ public class Main {
 
 				break;
 			default:
+				System.out.println("NO!");
 				break;
 			}
 		}

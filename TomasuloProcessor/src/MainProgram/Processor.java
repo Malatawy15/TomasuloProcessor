@@ -26,10 +26,6 @@ public class Processor {
 	private RegisterFile registerFile;
 	private ArrayList<Instruction> program;
 
-	private int nRobEntries;
-	private int[] nRS;
-	private int[] nCyclesRS;
-
 	public static Processor getProcessor() {
 		if (singletonProcessor == null) {
 			singletonProcessor = new Processor();
@@ -39,7 +35,6 @@ public class Processor {
 
 	public Processor() {
 	}
-
 
 	public void initProcessor(int instructionBufferSize,
 			int instructionAddress, Memory dataMemory, Memory instMemory,
@@ -52,9 +47,8 @@ public class Processor {
 		this.instMemory = instMemory;
 		this.program = program;
 		this.registerFile = registerFile;
-		this.nRobEntries = nRobEntries;
-		this.nRS = nRS;
-		this.nCyclesRS = nCyclesRS;
+		this.stations = new Stations(9, nRS, nCyclesRS);
+		this.rob = new ReOrderBuffer(nRobEntries);
 	}
 	
 	public void flush() {
@@ -83,23 +77,28 @@ public class Processor {
 			if (!instructionBuffer.isFull()) {
 				int instIndex = (instMemory.read((short) curInstAddress))
 						.getData();
-				if (instIndex < 0 || instIndex > program.size())
-					return 0;
-				instructionBuffer.insert(program.get(instIndex));
-				curInstAddress += 2;
+				if (!(instIndex < 0 || (curInstAddress-instructionAddress)/2 >= program.size())){		
+					System.out.println((curInstAddress-instructionAddress)/2);
+					
+					instructionBuffer.insert(program.get((curInstAddress-instructionAddress)/2));
+					curInstAddress += 2;
+				}
 			}
 			// Issue new instruction
-			Instruction myIn = instructionBuffer.getFirst();
-			int type = myIn.getType();
-			int index = stations.checkFree(type);
-			if (index != -1) {
-				int robIndex = rob.insert(new ReOrderObject(myIn, 0)); // REPLACE
-																		// ZERO
-																		// BY
-																		// MEMORY
-																		// ADDRESS
-				stations.getStations()[type][index].loadInstruction(myIn,
-						robIndex);
+			if(!instructionBuffer.isEmpty()){
+				Instruction myIn = instructionBuffer.getFirst();
+				int type = myIn.getType();
+				int index = stations.checkFree(type);
+				if (index != -1) {
+					int robIndex = rob.insert(new ReOrderObject(myIn, 0)); // REPLACE
+																			// ZERO
+																			// BY
+																			// MEMORY
+																			// ADDRESS
+					stations.getStations()[type][index].loadInstruction(myIn,
+							robIndex);
+					instructionBuffer.removeFirst();
+				}
 			}
 			// Execute in reservation stations
 			LinkedList<ReservationStation> doneStations = stations.runCycle();
@@ -109,6 +108,9 @@ public class Processor {
 			}
 			// commit changes
 			rob.commit();
+			if (rob.isEmpty()){
+				break;
+			}
 		}
 		return cycles;
 	}

@@ -10,6 +10,9 @@ public class Buffer <T>{
 	public Buffer (int size){
 		capacity = size;
 		buffer = new ArrayList<T>(capacity);
+		for(int i=0; i<capacity; i++){
+			buffer.add(null);
+		}
 		head = 0;
 		tail = -1;
 		numItems = 0;

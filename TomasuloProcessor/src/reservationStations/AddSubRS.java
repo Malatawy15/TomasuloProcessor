@@ -19,6 +19,7 @@ public class AddSubRS extends ReservationStation {
 		busy = true;
 		loadOperands();
 		robIndex = indROB;
+		System.out.println("LOAD INS: "+robIndex+" "+vals[0]+" "+vals[1]);
 	}
 	
 	private void loadOperands(){
@@ -76,6 +77,7 @@ public class AddSubRS extends ReservationStation {
 	@Override
 	public boolean exec() {
 		if (opsReady[0]&&opsReady[1]){
+			System.out.println("EXEC: "+curNum+" "+numToExec);
 			curNum++;
 			return curNum == numToExec;
 		}

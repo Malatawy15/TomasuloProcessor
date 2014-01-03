@@ -22,6 +22,8 @@ public class ReOrderBuffer extends Buffer<ReOrderObject>{
 	}
 	
 	public void commit(){
+		if(isEmpty()) 
+			return;
 		ReOrderObject roo = getFirst();
 		//check if branch, then check for flushing
 		//if passes all checks, commit changes to memory
